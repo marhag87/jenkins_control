@@ -71,7 +71,7 @@ class JenkinsControl:
             raise Exception('Could not find jobs for node')
 
     def job_running_on_computer(self, job, computer):
-        return job in self.get_jobs(self.url, computer)
+        return job in self.get_jobs(computer)
 
     def get_status(self, computer):
         response = requests.get(
