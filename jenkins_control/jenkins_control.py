@@ -128,3 +128,17 @@ class JenkinsControl:
                     response.text,
                 )
             )
+
+    def get_computers_in_label(self, label):
+        response = requests.get(
+            '{}/label/{}/api/json'.format(
+                self.url,
+                label,
+            )
+        )
+        if response.status_code == 200:
+            info = response.json()
+            nodes = info.get('nodes', {})
+            return sorted([x.get('nodeName') for x in nodes])
+        else:
+            raise Exception('Could not fetch label')
