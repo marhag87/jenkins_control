@@ -1,6 +1,9 @@
 import requests
 from html.parser import HTMLParser
-from pyyamlconfig import load_config
+from pyyamlconfig import (
+    load_config,
+    PyYAMLConfigError,
+)
 from os.path import expanduser
 
 
@@ -21,15 +24,24 @@ class BuildsParser(HTMLParser):
 
 class JenkinsControl:
     def __init__(self, url):
-        self.config = load_config(expanduser('~/.config/jenkins_control.yaml'))
+        try:
+            self.config = load_config(expanduser('~/.config/jenkins_control.yaml'))
+            self.config_loaded = True
+        except PyYAMLConfigError:
+            self.config_loaded = False
         if url is None:
-            self.url = self.config.get('url')
+            if self.config_loaded is True:
+                self.url = self.config.get('url')
+            else:
+                raise Exception('No url provided on commandline or in config file')
         else:
             self.url = url
         self.session = requests.session()
         self.logged_in = False
 
     def login(self):
+        if self.config_loaded is False:
+            raise Exception('No username and password provided in config file')
         if self.logged_in is False:
             self.session = requests.session()
             response = self.session.post(
