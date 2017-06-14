@@ -37,36 +37,6 @@ class JenkinsControl:
         else:
             self.url = url
         self.session = requests.session()
-        self.logged_in = False
-
-    def login(self):
-        if self.config_loaded is False:
-            raise Exception('No username and password provided in config file')
-        if self.logged_in is False:
-            self.session = requests.session()
-            response = self.session.post(
-                '{}/j_acegi_security_check'.format(
-                    self.url,
-                ),
-                data={
-                    'j_username': self.config.get('username'),
-                    'j_password': self.config.get('password'),
-                    'Submit': 'log in',
-                    'from': '/manage',
-                },
-            )
-            if response.status_code == 200:
-                self.logged_in = True
-                return True
-            else:
-                raise Exception(
-                    'Could not login. {}: {}'.format(
-                        response.status_code,
-                        response.text,
-                    )
-                )
-        else:
-            return True
 
     def get_jobs(self, computer):
         response = requests.get(
@@ -123,13 +93,16 @@ class JenkinsControl:
         )
 
     def toggle_offline(self, computer, reason):
-        self.login()
         response = self.session.post(
             '{}/computer/{}/toggleOffline'.format(
                 self.url,
                 computer,
             ),
-            data={"offlineMessage": reason}
+            data={"offlineMessage": reason},
+            auth=(
+                self.config.get('username'),
+                self.config.get('apitoken'),
+            ),
         )
         if response.status_code == 200:
             return True
