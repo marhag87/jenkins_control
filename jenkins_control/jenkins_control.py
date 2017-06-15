@@ -1,4 +1,5 @@
 import requests
+import urllib
 from html.parser import HTMLParser
 from pyyamlconfig import (
     load_config,
@@ -19,7 +20,7 @@ class BuildsParser(HTMLParser):
                     if value.startswith('/job/'):
                         parts = value.split('/')
                         if len(parts) == 4:
-                            self.result.append(parts[2])
+                            self.result.append(urllib.parse.unquote(parts[2]))
 
 
 class JenkinsControl:
