@@ -12,7 +12,7 @@ setup(
     author='marhag87',
     author_email='marhag87@gmail.com',
     url='https://github.com/marhag87/jenkins_control',
-    version='0.3.2',
+    version='0.4.0',
     packages=find_packages(),
     license='WTFPL',
     description='Simple controls for jenkins',
