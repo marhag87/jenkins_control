@@ -117,6 +117,28 @@ class JenkinsControl:
                 )
             )
 
+    def change_offline_cause(self, computer, reason):
+        response = self.session.post(
+            '{}/computer/{}/changeOfflineCause'.format(
+                self.url,
+                computer,
+            ),
+            data={"offlineMessage": reason},
+            auth=(
+                self.config.get('username'),
+                self.config.get('apitoken'),
+            ),
+        )
+        if response.status_code == 200:
+            return True
+        else:
+            raise Exception(
+                '{}: {}'.format(
+                    response.status_code,
+                    response.text,
+                )
+            )
+
     def launch_slave_agent(self, computer):
         response = self.session.post(
             '{}/computer/{}/launchSlaveAgent'.format(

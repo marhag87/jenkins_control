@@ -81,6 +81,8 @@ if __name__ == '__main__':
             jenkins.status(computer)
         elif args.offline:
             jenkins.toggle_offline(computer, args.reason)
+        elif args.reason != '':
+            jenkins.change_offline_cause(computer, args.reason)
         elif args.agent:
             jenkins.launch_slave_agent(computer)
         else:
