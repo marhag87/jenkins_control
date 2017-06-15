@@ -68,6 +68,8 @@ class JenkinsControl:
             if computer_status.get('offline') is True:
                 offline_cause = computer_status.get('offlineCauseReason')
                 if offline_cause != '':
+                    if offline_cause.startswith('Connection was broken'):
+                        return "offline (Connection broken)"
                     return "offline ({})".format(offline_cause)
                 else:
                     return "offline"
