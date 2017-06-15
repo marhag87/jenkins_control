@@ -51,6 +51,13 @@ if __name__ == '__main__':
         action='store_true',
         help='mark the node temporarily offline'
     )
+    group.add_argument(
+        '-a',
+        '--agent',
+        action='store_true',
+        help='launch slave agent on node'
+    )
+
     parser.add_argument(
         '-r',
         '--reason',
@@ -74,6 +81,8 @@ if __name__ == '__main__':
             jenkins.status(computer)
         elif args.offline:
             jenkins.toggle_offline(computer, args.reason)
+        elif args.agent:
+            jenkins.launch_slave_agent(computer)
         else:
             print("You need to specify a command")
             exit(1)

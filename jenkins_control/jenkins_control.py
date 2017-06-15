@@ -117,6 +117,27 @@ class JenkinsControl:
                 )
             )
 
+    def launch_slave_agent(self, computer):
+        response = self.session.post(
+            '{}/computer/{}/launchSlaveAgent'.format(
+                self.url,
+                computer,
+            ),
+            auth=(
+                self.config.get('username'),
+                self.config.get('apitoken'),
+            )
+        )
+        if response.status_code == 200:
+            return True
+        else:
+            raise Exception(
+                '{}: {}'.format(
+                    response.status_code,
+                    response.text,
+                )
+            )
+
     def get_computers_in_label(self, label):
         response = requests.get(
             '{}/label/{}/api/json'.format(
